@@ -16,14 +16,14 @@ Each game starts with a randomly generated game map.
 
 > You will meet different elements while moving on the game map:
 >
-> "🚶": Player
-> "monster": "👹": Monster
-> "obstacle": "⬛": Obstacle
-> "destination": "🏁": Destination
-> "empty": "⬜": Empty space
-> "heal": "❤️": Healing tile
-> "power_up": "💪": Attack power-up tile
-> "chance": "❓": Chance tile
+> "🚶": Player  
+> "monster": "👹": Monster  
+> "obstacle": "⬛": Obstacle  
+> "destination": "🏁": Destination  
+> "empty": "⬜": Empty space  
+> "heal": "❤️": Healing tile  
+> "power_up": "💪": Attack power-up tile  
+> "chance": "❓": Chance tile  
 
 ## Authors
 
