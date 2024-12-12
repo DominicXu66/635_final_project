@@ -202,7 +202,6 @@ def spawn_boss_near_destination(game_map,range_=1):
     print("Chance tile effect: Strong monsters spawned near the destination!")
 
 
-# Main game loop and related functions remain the same
 
 
 def battle(player, monster):
@@ -218,7 +217,7 @@ def battle(player, monster):
 
         # Display round results
         print(f"Player dealt {player['attack']} damage! Monster HP: {Fore.RED + str(max(0, monster['hp']))}")
-        print(f"Monster dealt {monster['attack']} damage! Player HP: {player['hp']} / {player['max_hp']}")
+        print(f"Monster dealt {monster['attack']} damage! Player HP: {max(0,player['hp'])} / {player['max_hp']}")
         # Check if the player is defeated
         
         if player['hp'] <= 0:
