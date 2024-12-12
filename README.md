@@ -17,8 +17,8 @@ Each game starts with a randomly generated game map.
 > You will meet different elements while moving on the game map:
 >
 > 🚶: Player  
-> 👹: Monster
-> 😈: boss
+> 👹: Monster  
+> 😈: boss  
 > ⬛: Obstacle  
 > 🏁: Destination  
 > ⬜: Empty space  
