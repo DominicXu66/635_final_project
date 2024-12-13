@@ -64,7 +64,7 @@ def move_player(player_pos, direction, game_map):
 def generate_map(m, n):
     """Generate a random game map"""
     game_map = [["." for _ in range(n)] for _ in range(m)]
-    num_obstacles = (m * n) // 5  # Number of obstacles
+    num_obstacles = (m * n) // 6  # Number of obstacles
     num_monsters = (m * n) // 15  # Number of monsters
     num_boss = 1
     num_healing_tiles = (m * n) // 20  # Number of healing tiles
@@ -72,7 +72,7 @@ def generate_map(m, n):
     num_chance_tiles = (m * n) // 30  # Number of chance tiles
 
     for _ in range(num_obstacles):
-        x, y = random.randint(0, m - 2), random.randint(0, n - 2)
+        x, y = random.randint(1, m - 2), random.randint(1, n - 2)
         game_map[x][y] = "X"  # Obstacle
 
     monster_positions = []
@@ -128,7 +128,7 @@ def handle_chance_tile(player, game_map, player_pos):
         lambda: increase_max_hp(player),
         lambda: spawn_monsters_around(player_pos, game_map, range_=1),
         lambda: spawn_monsters_around(player_pos, game_map, range_=2),
-        lambda: teleport_player(player, game_map),
+        lambda: teleport_player(player, player_pos, game_map),
         lambda: increase_attack(player),
         lambda: decrease_attack(player),
         lambda: kill_all_monsters(game_map),
@@ -164,13 +164,13 @@ def spawn_monsters_around(pos, game_map, range_=1):
     print(f"Chance tile effect: Monsters spawned around you in a range of {range_}!")
 
 
-def teleport_player(player, game_map):
+def teleport_player(player, player_pos, game_map):
     empty_tiles = [(i, j) for i in range(len(game_map)) for j in range(len(game_map[0])) if game_map[i][j] == "."]
     if empty_tiles:
         new_pos = random.choice(empty_tiles)
+        player_pos = new_pos
         print(f"Chance tile effect: You were teleported to a new position: {new_pos}!")
 
-        return new_pos
 
 def increase_attack(player):
     increase = random.randint(2, 5)
@@ -206,6 +206,7 @@ def spawn_boss_near_destination(game_map,range_=1):
 
 def battle(player, monster):
     """Handle battle between player and monster"""
+    clear_console()
     print("A battle has started!")
     print(f"Player HP: {player['hp']} / {player['max_hp']}, Attack: {player['attack']}")
     print(Fore.RED + f"Monster HP: {monster['hp']}, Attack: {monster['attack']}")
@@ -234,6 +235,8 @@ def battle(player, monster):
 
 def game_loop(m, n):
     """Main game loop"""
+    clear_console()
+    print("Game Start!")
     game_map, monster_positions = generate_map(m, n)
     player_pos = (0, 0)  # Player starting position
     destination = (m - 1, n - 1)  # Destination position
@@ -271,25 +274,6 @@ def game_loop(m, n):
             game_map[player_pos[0]][player_pos[1]] = "."
 
         # Check if player encounters a monster
-        if current_tile == "M":
-            new_monster = {"hp": random.randint(5, 15), "attack": random.randint(2, 6)}
-            player = battle(player, new_monster)
-            if player is None:
-                print("Game over! You lost the battle.")
-                break
-            else:
-                # Remove defeated monster from the map
-                del monsters[player_pos]
-                game_map[player_pos[0]][player_pos[1]] = "."
-        if current_tile == "B":
-            player = battle(player, boss)
-            if player is None:
-                print("Game over! You lost the battle.")
-                break
-            else:
-                # Remove defeated monster from the map
-                del monsters[player_pos]
-                game_map[player_pos[0]][player_pos[1]] = "."
         if player_pos in monsters:
             monster = monsters[player_pos]
             player = battle(player, monster)
@@ -300,6 +284,24 @@ def game_loop(m, n):
                 # Remove defeated monster from the map
                 del monsters[player_pos]
                 game_map[player_pos[0]][player_pos[1]] = "."
+        elif current_tile == "M":
+            new_monster = {"hp": random.randint(5, 15), "attack": random.randint(2, 6)}
+            player = battle(player, new_monster)
+            if player is None:
+                print("Game over! You lost the battle.")
+                break
+            else:
+                game_map[player_pos[0]][player_pos[1]] = "."
+        
+        if current_tile == "B":
+            player = battle(player, boss)
+            if player is None:
+                print("Game over! You lost the battle.")
+                break
+            else:
+                game_map[player_pos[0]][player_pos[1]] = "."
+                
+        
 
     if player_pos == destination and player is not None:
         print("Congratulations! You reached the destination!")
